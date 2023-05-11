@@ -5,6 +5,7 @@ import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider } from '@chakra-ui/react'
 
 import { theme } from './chakra/themes'
+import { RecoilRoot } from 'recoil'
 
 export default function Providers({ 
     children 
@@ -12,10 +13,12 @@ export default function Providers({
   children: React.ReactNode 
   }) {
   return (
-    <CacheProvider>
-      <ChakraProvider theme={theme}>
-        {children}
-      </ChakraProvider>
-    </CacheProvider>
+    <RecoilRoot>
+      <CacheProvider>
+        <ChakraProvider theme={theme}>
+          {children}
+        </ChakraProvider>
+      </CacheProvider>
+    </RecoilRoot>
   )
 }
