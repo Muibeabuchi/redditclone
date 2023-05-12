@@ -5,11 +5,15 @@ import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, 
 import { useRecoilState } from "recoil";
 import AuthInputs from "./AuthInputs";
 import OAuthButtons from "./OAuthButtons";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/clientApp";
+import { useEffect } from "react";
 
 
 
 const AuthModal:React.FC=()=>{
     // const { isOpen, onOpen, onClose } = useDisclosure()
+    const [user, loading, error] = useAuthState(auth);
     const [modalState,setModalState] = useRecoilState(authModalState)
     const handleClose =()=>{
         setModalState(prevState=>({
@@ -17,6 +21,10 @@ const AuthModal:React.FC=()=>{
             open: false
     }))
     };
+
+    useEffect(()=>{
+      if(user) handleClose()
+    },[user])
 
     return (
       <>
