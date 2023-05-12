@@ -1,14 +1,25 @@
 'use client'
 
 import { authModalState } from "@/atoms/AuthModalAtom"
-import { Input, Button, Flex, Text } from "@chakra-ui/react"
+import { Input, Button, Flex, Text , FormErrorMessage} from "@chakra-ui/react"
 import { useState } from "react"
 import { useSetRecoilState } from "recoil"
+import { auth } from "@/firebase/clientApp"
+import {useCreateUserWithEmailAndPassword} from 'react-firebase-hooks/auth'
+import { FIREBASE_ERRORS } from "@/firebase/errors"
 
 
 const SignUp:React.FC= () => {
+
+    const [error,setError] = useState('')
     const setAuthModal = useSetRecoilState(authModalState)
-    const [signup,setSignupForm] = useState({
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        formError,
+      ] = useCreateUserWithEmailAndPassword(auth);
+    const [signupForm,setSignupForm] = useState({
         email:'',
         password:'',
         confirmPassword:'',
@@ -20,12 +31,19 @@ const SignUp:React.FC= () => {
             [e.target.name]:e.target.value
         }))
     }
-    // const onSubmit=(e:React.ChangeEvent<HTMLInputElement>)=>{
-    //     e.preventDefault()
+    const onSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+        if(error) setError('')
+        e.preventDefault()
+        if(signupForm.password !== signupForm.confirmPassword){
+            // throw new Error('Passwords ')
+            setError("Passwords do not match")
+            return
+        }
+        createUserWithEmailAndPassword(signupForm.email,signupForm.password)
         
-    // }
+    }
   return (
-    <form>
+    <form onSubmit={onSubmit}>
         <Input onChange={onChange}required name='email' type='email' placeholder='Email' fontSize='10pt' _placeholder={{color:'gray.500'}} _hover={{
             border:'1px solid',
             bg:'white',
@@ -70,7 +88,12 @@ const SignUp:React.FC= () => {
         background='gray.100'
         mb={2}
         />
-        <Button type='submit' height='36px' width='100%' mb={2} mt={2   }>Sign Up</Button>
+        {
+            (error || formError )&&(<Text textAlign='center' color='red' fontSize={'10pt'}>{error || FIREBASE_ERRORS[formError.message as keyof typeof FIREBASE_ERRORS]}</Text>
+            )
+        }
+        {/* <FormErrorMessage></FormErrorMessage> */}
+        <Button type='submit' height='36px' width='100%' mb={2} mt={2   } isLoading={loading}>Sign Up</Button>
         <Flex fontSize='9pt' justify='center'>
             <Text mr={1}>Already a Redditor?</Text>
             <Text onClick={()=>setAuthModal(prev=>({...prev,view:'login'}))} color='blue.500' fontWeight={700} cursor='pointer' >Login</Text>
