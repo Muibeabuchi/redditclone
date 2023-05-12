@@ -89,7 +89,7 @@ const SignUp:React.FC= () => {
         mb={2}
         />
         {
-            (error || formError )&&(<Text textAlign='center' color='red' fontSize={'10pt'}>{error || FIREBASE_ERRORS[formError.message as keyof typeof FIREBASE_ERRORS]}</Text>
+            (error || formError )&&(<Text textAlign='center' color='red' fontSize={'10pt'}>{error || FIREBASE_ERRORS[formError?.message as keyof typeof FIREBASE_ERRORS]}</Text>
             )
         }
         {/* <FormErrorMessage></FormErrorMessage> */}
