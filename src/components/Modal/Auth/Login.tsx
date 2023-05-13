@@ -33,6 +33,7 @@ const Login = () => {
         e.preventDefault()
         signInWithEmailAndPassword(loginForm.email,loginForm.password)
     }
+
   return (
     <form onSubmit={onSubmit}>
         <Input onChange={onChange}required name='email' type='email' placeholder='Email' fontSize='10pt' _placeholder={{color:'gray.500'}} _hover={{
@@ -66,6 +67,10 @@ const Login = () => {
         />
         <Button type='submit' height='36px' width='100%' mb={2} mt={2} isLoading={loading}>Log In</Button>
         {error && <Text textAlign={'center'} color={'red'} fontSize={'10pt'}>{FIREBASE_ERRORS[error?.message  as  keyof  typeof FIREBASE_ERRORS]}</Text>}
+        <Flex justify={'center'} mb={2}>
+            <Text fontSize='9pt' mr={1}>Forgot your password</Text>
+            <Text fontSize='9pt' color='blue.500' cursor='pointer' onClick={()=>setAuthModal(prev=>({...prev,view:'resetpassword'}))} >Forgot your password</Text>
+        </Flex>
         <Flex fontSize='9pt' justify='center'>
             <Text mr={1}>New Here?</Text>
             <Text onClick={()=>setAuthModal(prev=>({...prev,view:'signup'}))} color='blue.500' fontWeight={700} cursor='pointer' >Sign Up?</Text>
