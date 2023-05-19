@@ -23,7 +23,14 @@ import {
 import { HiLockClosed } from "react-icons/hi";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { auth, db } from "@/firebase/clientApp";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  Transaction,
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export interface CreateCommunityModal {
@@ -62,22 +69,32 @@ export default function CreateCommunityModal({
     }
     setLoading(true);
     try {
-      const communityDocRef = doc(db, "community", communityName);
-      const communityDoc = await getDoc(communityDocRef);
-      if (communityDoc.exists()) {
-        throw new Error(
-          `Sorry,r/${communityName} is already taken.Try another`
+      await runTransaction(db, async (transaction) => {
+        // verifying if the communityname is available
+        const communityDocRef = doc(db, "community", communityName);
+        const communityDoc = await transaction.get(communityDocRef);
+        if (communityDoc.exists()) {
+          throw new Error(
+            `Sorry,r/${communityName} is already taken.Try another`
+          );
+        }
+        // create the community
+        transaction.set(communityDocRef, {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          numberOfMembers: 1,
+          privacyType: communityType,
+        });
+        setCommunityName("");
+        // create a community snippet on the user
+        transaction.set(
+          doc(db, `users/${user?.uid}/communitySnippets`, communityName),
+          {
+            communityId: communityName,
+            isModerator: true,
+          }
         );
-      }
-
-      // create the community
-      await setDoc(communityDocRef, {
-        creatorId: user?.uid,
-        createdAt: serverTimestamp(),
-        numberOfMembers: 1,
-        privacyType: communityType,
       });
-      setCommunityName("");
     } catch (error: any) {
       console.log("handlecreatecommunity error :" + error?.message);
       setError(error.message);
