@@ -22,6 +22,9 @@ import {
 } from "@chakra-ui/react";
 import { HiLockClosed } from "react-icons/hi";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
+import { auth, db } from "@/firebase/clientApp";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export interface CreateCommunityModal {
   open: boolean;
@@ -32,10 +35,13 @@ export default function CreateCommunityModal({
   open,
   handleClose,
 }: CreateCommunityModal) {
+  const [user] = useAuthState(auth);
   const [communityName, setCommunityName] = useState("");
   const [charsRemaining, setCharsRemaining] = useState(21);
-  const [commuityType, setCommunityType] = useState("public");
-  function onCommuityTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const [communityType, setCommunityType] = useState("public");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  function handleCommunityTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
     setCommunityType(e.target.name);
   }
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -43,6 +49,45 @@ export default function CreateCommunityModal({
     setCommunityName(event.target.value);
     setCharsRemaining(21 - event.target.value.length);
   }
+  const handleCreateCommunity = async () => {
+    // validate the community name
+    console.log("starting creating community");
+    setError("");
+    const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (format.test(communityName) || communityName.length < 3) {
+      setError(
+        "Community names must between 3-21 characters,and can only contain letters,numbers or underscores"
+      );
+      return;
+    }
+    setLoading(true);
+    try {
+      const communityDocRef = doc(db, "community", communityName);
+      const communityDoc = await getDoc(communityDocRef);
+      if (communityDoc.exists()) {
+        throw new Error(
+          `Sorry,r/${communityName} is already taken.Try another`
+        );
+      }
+
+      // create the community
+      await setDoc(communityDocRef, {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp(),
+        numberOfMembers: 1,
+        privacyType: communityType,
+      });
+      setCommunityName("");
+    } catch (error: any) {
+      console.log("handlecreatecommunity error :" + error?.message);
+      setError(error.message);
+    }
+    console.log("ending creating community");
+
+    setLoading(false);
+
+    // check if community name already exists
+  };
   return (
     <>
       <Modal isOpen={open} onClose={handleClose} size="lg">
@@ -89,6 +134,7 @@ export default function CreateCommunityModal({
               >
                 {charsRemaining} characters remaining
               </Text>
+              <Text color="red">{error}</Text>
               <Box mt={4} mb={4}>
                 <Text fontWeight={600} fontSize={15}>
                   Community Type
@@ -97,8 +143,8 @@ export default function CreateCommunityModal({
                 <VStack spacing={2} align={"start"}>
                   <Checkbox
                     name="private"
-                    isChecked={commuityType === "private"}
-                    onChange={onCommuityTypeChange}
+                    isChecked={communityType === "private"}
+                    onChange={handleCommunityTypeChange}
                   >
                     <Flex align={"center"}>
                       <Icon as={BsFillPersonFill} color="gray.500" pt={1} />
@@ -116,8 +162,8 @@ export default function CreateCommunityModal({
                   </Checkbox>
                   <Checkbox
                     name="public"
-                    isChecked={commuityType === "public"}
-                    onChange={onCommuityTypeChange}
+                    isChecked={communityType === "public"}
+                    onChange={handleCommunityTypeChange}
                   >
                     <Flex align={"center"}>
                       <Icon as={BsFillEyeFill} color="gray.500" pt={1} />
@@ -136,8 +182,8 @@ export default function CreateCommunityModal({
                   </Checkbox>
                   <Checkbox
                     name="restricted"
-                    isChecked={commuityType === "restricted"}
-                    onChange={onCommuityTypeChange}
+                    isChecked={communityType === "restricted"}
+                    onChange={handleCommunityTypeChange}
                   >
                     <Flex align={"center"}>
                       <Icon as={HiLockClosed} color="gray.500" pt={1} />
@@ -168,7 +214,13 @@ export default function CreateCommunityModal({
             >
               Cancel
             </Button>
-            <Button height="30px">Create Community</Button>
+            <Button
+              height="30px"
+              onClick={handleCreateCommunity}
+              isLoading={loading}
+            >
+              Create Community
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
