@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { db } from "@/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import CommunityHeader from "@/components/Community/CommunityHeader";
+import PageLayout from "@/components/Layout/PageLayout";
+import safeJsonStringify from "safe-json-stringify";
 
 type CommunityPageProps = {
   params: {
@@ -23,7 +25,7 @@ async function getCommunityData(page: string) {
     numberOfMembers: response?.data()?.numberOfMembers,
     createdAt: response?.data()?.createdAt,
   };
-  return communityData;
+  return JSON.parse(safeJsonStringify(communityData));
 }
 
 /* @ts-expect-error Async Server Component */
@@ -37,6 +39,14 @@ const CommunityPage: React.FC<CommunityPageProps> = async ({ params }) => {
   return (
     <>
       <CommunityHeader communityData={communityData} />
+      <PageLayout>
+        <>
+          <div>child 1</div>
+        </>
+        <>
+          <div>child 2</div>
+        </>
+      </PageLayout>
     </>
   );
 };
