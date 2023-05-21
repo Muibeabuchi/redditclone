@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import CommunityHeader from "@/components/Community/CommunityHeader";
 import PageLayout from "@/components/Layout/PageLayout";
 import safeJsonStringify from "safe-json-stringify";
+import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
 
 type CommunityPageProps = {
   params: {
@@ -41,7 +42,7 @@ const CommunityPage: React.FC<CommunityPageProps> = async ({ params }) => {
       <CommunityHeader communityData={communityData} />
       <PageLayout>
         <>
-          <div>child 1</div>
+          <CommunityCreatePostLink />
         </>
         <>
           <div>child 2</div>

@@ -6,13 +6,21 @@ import AuthModal from "@/components/Modal/Auth/AuthModal";
 import { User } from "firebase/auth";
 import Icons from "../Icons";
 import UserMenu from "./UserMenu";
+import { useState, useEffect } from "react";
 
 type RightContentProps = {
   user?: User | null;
 };
 
 const RightContent: React.FC<RightContentProps> = ({ user }) => {
-  // console.log(user)
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
   return (
     <>
       <AuthModal />

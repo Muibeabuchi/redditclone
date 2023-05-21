@@ -24,7 +24,6 @@ const Directory: React.FC<DirectoryPropTypes> = ({ children }) => {
   // const [user,loading,error] = useAuthState(auth)
   return (
     <Menu>
-      {/* {({ isOpen }) => ( */}
       <MenuButton
         cursor={"pointer"}
         mr={2}
@@ -39,7 +38,7 @@ const Directory: React.FC<DirectoryPropTypes> = ({ children }) => {
           width={{ base: "auto", lg: "200px" }}
         >
           <Flex align="center">
-            <Icon as={TiHome} fontSize={22} mr={[1, null, 2]} />
+            <Icon as={TiHome} fontSize={22} mr={{ base: 1, lg: 2 }} />
             <Flex display={{ base: "none", lg: "flex" }} align="center">
               <Text fontWeight={600} fontSize="10pt">
                 Home
@@ -50,8 +49,6 @@ const Directory: React.FC<DirectoryPropTypes> = ({ children }) => {
         </Flex>
       </MenuButton>
       <MenuList>{children}</MenuList>
-
-      {/* // )} */}
     </Menu>
   );
 };

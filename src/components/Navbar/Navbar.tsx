@@ -8,13 +8,18 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/clientApp";
 import Directory from "./Directory/Directory";
 import Communities from "./Directory/Communities";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const [user, loading, error] = useAuthState(auth);
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    if (!user) return;
-  }, [user]);
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <Flex

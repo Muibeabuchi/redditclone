@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { User } from "firebase/auth";
@@ -9,9 +9,14 @@ type SearchInputProps = {
   user: User | undefined | null;
 };
 const SearchInput: React.FC<SearchInputProps> = ({ user }) => {
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    if (!user) return;
-  }, [user]);
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
   return (
     <Flex align="center" flexGrow={1} mr={2} maxW={user ? "auto" : "600px"}>
       <InputGroup>
