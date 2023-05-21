@@ -21,6 +21,7 @@ import { Post } from "@/atoms/PostsAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams, useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import PostErrorAlert from "./PostErrorAlert";
 
 interface IAppProps {}
 
@@ -64,6 +65,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
   });
   const [selectedFile, setSelectedFile] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
   function onTextChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -122,11 +124,13 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
     } catch (error: any) {
       console.log(`handlecreatepost error : ${error.message}`);
       setLoading(false);
+      setError(true);
     }
   }
 
   return (
     <Flex direction="column" bg="white" mt={2} borderRadius={4}>
+      {/* <> */}
       <Flex width="100%">
         {formTabs.map((item) => (
           <TabItem
@@ -155,6 +159,8 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
           />
         )}
       </Flex>
+      {/* <NewPostForm /> */}
+      {error && <PostErrorAlert />}
     </Flex>
   );
 };
