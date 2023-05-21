@@ -4,22 +4,22 @@ import { Image } from "@chakra-ui/react";
 import { Flex } from "@chakra-ui/react";
 import SearchInput from "./SearchInput";
 import RightContent from "./RightContent/RightContent";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/clientApp";
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import { auth } from "@/firebase/clientApp";
 import Directory from "./Directory/Directory";
 import Communities from "./Directory/Communities";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const [user, loading, error] = useAuthState(auth);
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  // const [user, loading, error] = useAuthState(auth);
+  // const [isMounted, setIsMounted] = useState(false);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
 
-  if (!isMounted) {
-    return null;
-  }
+  // if (!isMounted) {
+  //   return null;
+  // }
 
   return (
     <Flex
@@ -45,9 +45,9 @@ export default function Navbar() {
           alt="navbar logo text"
         />
       </Flex>
-      {user && <Directory>{<Communities />}</Directory>}
-      <SearchInput user={user} />
-      <RightContent user={user} />
+      <Directory>{<Communities />}</Directory>
+      <SearchInput />
+      <RightContent />
     </Flex>
   );
 }

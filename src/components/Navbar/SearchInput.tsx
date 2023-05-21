@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { User } from "firebase/auth";
+import { auth } from "@/firebase/clientApp";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-type SearchInputProps = {
-  user: User | undefined | null;
-};
-const SearchInput: React.FC<SearchInputProps> = ({ user }) => {
+// type SearchInputProps = {
+//   user: User | undefined | null;
+// };
+const SearchInput: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [user] = useAuthState(auth);
   useEffect(() => {
     setIsMounted(true);
   }, []);
