@@ -13,6 +13,9 @@ const usePosts = () => {
   return {
     postStateValue,
     setPostValue,
+    onVote,
+    onSelectPost,
+    onDeletePost,
   };
 };
 
