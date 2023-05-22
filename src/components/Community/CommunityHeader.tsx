@@ -6,16 +6,35 @@ import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaReddit } from "react-icons/fa";
 
+// import { useDocument } from "react-firebase-hooks/firestore";
+// import { doc } from "firebase/firestore";
+// import { db } from "@/firebase/clientApp";
+// import { useParams } from "next/navigation";
+
 type CommunityHeaderProps = {
   communityData: Community;
 };
 const CommunityHeader: React.FC<CommunityHeaderProps> = ({ communityData }) => {
+  // const { communitypage } = useParams();
+  // const [snapshotValue, snapshotLoading, snapshotError] = useDocument(
+  //   doc(db, "community", communitypage)
+  // {
+  //   snapshotListenOptions: { includeMetadataChanges: true },
+  // }
+  // );
+  // const communitySnapshotData = snapshotValue?.data();
+  // ?.docs?.map((doc) => ({
+  //   id: doc.id,
+  //   ...doc.data(),
+  // }));
+  // console.log(communitySnapshotData);
+
   const { communityStateValue, onJoinOrLeaveCommunity, loading } =
     useCommunityData();
   const isJoined = !!communityStateValue.mySnippets.find(
     (item) => item.communityId === communityData.id
   );
-  console.log(isJoined);
+  // console.log(isJoined);
   return (
     <Flex direction={"column"} width={"100%"} height="146px">
       <Box height="50%" width="100%" bg="blue.400"></Box>

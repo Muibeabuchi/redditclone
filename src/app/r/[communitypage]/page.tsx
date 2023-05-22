@@ -6,13 +6,14 @@ import CommunityHeader from "@/components/Community/CommunityHeader";
 import PageLayout from "@/components/Layout/PageLayout";
 import safeJsonStringify from "safe-json-stringify";
 import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
+import Posts from "@/components/Posts/Posts";
 
 type CommunityPageProps = {
   params: {
     communitypage: string;
   };
 };
-async function getCommunityData(page: string) {
+export async function getCommunityData(page: string) {
   const communityRef = doc(db, "community", page);
   // if(!communityRef) return
   const response = await getDoc(communityRef);
@@ -43,6 +44,7 @@ const CommunityPage: React.FC<CommunityPageProps> = async ({ params }) => {
       <PageLayout>
         <>
           <CommunityCreatePostLink />
+          <Posts communityData={communityData} />
         </>
         <>
           <div>child 2</div>
