@@ -7,6 +7,7 @@ import PageLayout from "@/components/Layout/PageLayout";
 import safeJsonStringify from "safe-json-stringify";
 import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
 import Posts from "@/components/Posts/Posts";
+import CommunityAbout from "@/components/Community/CommunityAbout";
 
 type CommunityPageProps = {
   params: {
@@ -47,7 +48,7 @@ const CommunityPage: React.FC<CommunityPageProps> = async ({ params }) => {
           <Posts communityData={communityData} />
         </>
         <>
-          <div>child 2</div>
+          <CommunityAbout communityData={communityData} />
         </>
       </PageLayout>
     </>
