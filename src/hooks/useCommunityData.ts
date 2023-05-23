@@ -26,7 +26,7 @@ const useCommunityData = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // function that decides whether to leave or join a community or open he auth modal
+  // function that decides whether to leave or join a community or open the auth modal
   const onJoinOrLeaveCommunity = (
     communityData: Community,
     isJoined: boolean
@@ -70,6 +70,7 @@ const useCommunityData = () => {
     } catch (error: any) {
       console.log(error.message);
       setError(error.message);
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -78,7 +79,7 @@ const useCommunityData = () => {
     try {
       // create a batch
       const batch = writeBatch(db);
-      // delete the community snippet fro the user collection
+      // delete the community snippet for the user collection
       const snippetDocRef = doc(
         db,
         `users/${user?.uid}/communitySnippets/${communityId}`
