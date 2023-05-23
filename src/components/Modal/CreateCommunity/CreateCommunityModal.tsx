@@ -83,6 +83,7 @@ export default function CreateCommunityModal({
           creatorId: user?.uid,
           createdAt: serverTimestamp(),
           numberOfMembers: 1,
+          imageUrl: "",
           privacyType: communityType,
         });
         setCommunityName("");
