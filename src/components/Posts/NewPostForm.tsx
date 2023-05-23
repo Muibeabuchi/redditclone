@@ -87,6 +87,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
   }
 
   async function handleCreatePost() {
+    if (!textInputs.title) return;
     // create new post object
     const newPost: Post = {
       communityId: communitypage as string,
@@ -118,9 +119,9 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
           });
         }
         // redirect user back to the community page
-        setLoading(false);
         router.back();
       }
+      setLoading(false);
     } catch (error: any) {
       console.log(`handlecreatepost error : ${error.message}`);
       setLoading(false);

@@ -10,6 +10,7 @@ import React from "react";
 import PostItem from "./PostItem";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Stack } from "@chakra-ui/react";
+import PostLoader from "./PostLoader";
 
 type Props = {
   communityData: Community;
@@ -42,6 +43,7 @@ const Posts = ({ communityData }: Props) => {
         ...post,
         posts: posts as Post[],
       }));
+      setLoading(false);
     } catch (error: any) {
       console.log("posts error", error.message);
       setLoading(false);
@@ -52,19 +54,25 @@ const Posts = ({ communityData }: Props) => {
     getPosts();
   }, []);
   return (
-    <Stack spacing={2}>
-      {postStateValue.posts.map((post) => (
-        <PostItem
-          key={post.id}
-          onDeletePost={onDeletePost}
-          onSelectPost={onSelectPost}
-          onVote={onVote}
-          post={post}
-          userIsCreator={user?.uid === post.creatorId}
-          userVoteValue={undefined}
-        />
-      ))}
-    </Stack>
+    <>
+      {loading ? (
+        <PostLoader />
+      ) : (
+        <Stack spacing={2}>
+          {postStateValue.posts.map((post) => (
+            <PostItem
+              key={post.id}
+              onDeletePost={onDeletePost}
+              onSelectPost={onSelectPost}
+              onVote={onVote}
+              post={post}
+              userIsCreator={user?.uid === post.creatorId}
+              userVoteValue={undefined}
+            />
+          ))}
+        </Stack>
+      )}
+    </>
   );
 };
 

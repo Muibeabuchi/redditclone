@@ -1,6 +1,6 @@
 "use client";
 import { Post } from "@/atoms/PostsAtom";
-import { Flex, Icon, Image, Stack, Text } from "@chakra-ui/react";
+import { Flex, Icon, Image, Skeleton, Stack, Text } from "@chakra-ui/react";
 import moment from "moment";
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -33,6 +33,7 @@ function PostItem({
   onVote,
   userVoteValue,
 }: Props) {
+  const [loadingImage, setLoadingImage] = React.useState(true);
   return (
     <Flex
       border="1px solid"
@@ -96,7 +97,14 @@ function PostItem({
           <Text fontSize={"10pt"}>{post.body}</Text>
           {post.imageURL && (
             <Flex justify={"center"} align="center" p={2}>
-              <Image src={post.imageURL} alt="post image" maxH="460px" />
+              <Skeleton isLoaded={!loadingImage}>
+                <Image
+                  src={post.imageURL}
+                  alt="post image"
+                  maxH="460px"
+                  onLoad={() => setLoadingImage(false)}
+                />
+              </Skeleton>
             </Flex>
           )}
         </Stack>
