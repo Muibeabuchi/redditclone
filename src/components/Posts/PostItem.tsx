@@ -1,6 +1,8 @@
 "use client";
 import { Post } from "@/atoms/PostsAtom";
 import {
+  Alert,
+  AlertIcon,
   Flex,
   Icon,
   Image,
@@ -42,7 +44,7 @@ function PostItem({
   userVoteValue,
 }: Props) {
   const [loadingImage, setLoadingImage] = React.useState(true);
-  const [error, setError] = React.useState(false);
+  const [error, setError] = React.useState<any>(false);
   const [loadingDelete, setLoadingDelete] = React.useState(false);
   const handleDelete = async () => {
     setLoadingDelete(true);
@@ -100,6 +102,12 @@ function PostItem({
         />
       </Flex>
       <Flex direction={"column"} width="100%">
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            <Text mr={2}>{error.message}</Text>
+          </Alert>
+        )}
         <Stack spacing={1} p="10px">
           <Stack
             direction={"row"}
