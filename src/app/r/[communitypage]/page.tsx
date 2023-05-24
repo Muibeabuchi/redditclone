@@ -7,13 +7,16 @@ import PageLayout from "@/components/Layout/PageLayout";
 import safeJsonStringify from "safe-json-stringify";
 import CommunityCreatePostLink from "@/components/Community/CommunityCreatePostLink";
 import Posts from "@/components/Posts/Posts";
-import CommunityAbout from "@/components/Community/CommunityAbout";
+import CommunityAbout from "@/components/Community/CommunityAbout/CommunityAbout";
 
 type CommunityPageProps = {
   params: {
     communitypage: string;
   };
 };
+
+export const dynamic = "force-dynamic";
+
 export async function getCommunityData(page: string) {
   const communityRef = doc(db, "community", page);
   // if(!communityRef) return
@@ -27,6 +30,7 @@ export async function getCommunityData(page: string) {
     privacyType: response?.data()?.privacyType,
     numberOfMembers: response?.data()?.numberOfMembers,
     createdAt: response?.data()?.createdAt,
+    imageUrl: response?.data()?.imageUrl,
   };
   return JSON.parse(safeJsonStringify(communityData));
 }
@@ -38,7 +42,7 @@ const CommunityPage: React.FC<CommunityPageProps> = async ({ params }) => {
   if (!communityData || communityData == null) {
     notFound();
   }
-  console.log(communityData);
+  // console.log(communityData);
   return (
     <>
       <CommunityHeader communityData={communityData} />
