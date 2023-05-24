@@ -16,6 +16,7 @@ import { RiCakeLine } from "react-icons/ri";
 import moment from "moment";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import CommunityAboutAdmin from "./CommunityAboutAdmin";
 
 type Props = {
   communityData: Community;
@@ -74,6 +75,7 @@ const CommunityAbout = ({ communityData }: Props) => {
               Create Post
             </Button>
           </Link>
+          <CommunityAboutAdmin communityData={communityData} />
         </Stack>
       </Flex>
     </Box>

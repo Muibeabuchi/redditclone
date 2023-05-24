@@ -2,6 +2,7 @@
 
 import { Community } from "@/atoms/communitiesAtom";
 import useCommunityData from "@/hooks/useCommunityData";
+import useLiveCommunityData from "@/hooks/useLiveCommunityData";
 import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { FaReddit } from "react-icons/fa";
@@ -9,13 +10,13 @@ import { FaReddit } from "react-icons/fa";
 // import { useDocument } from "react-firebase-hooks/firestore";
 // import { doc } from "firebase/firestore";
 // import { db } from "@/firebase/clientApp";
-// import { useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 type CommunityHeaderProps = {
   communityData: Community;
 };
 const CommunityHeader: React.FC<CommunityHeaderProps> = ({ communityData }) => {
-  // const { communitypage } = useParams();
+  const { communitypage } = useParams();
   // const [snapshotValue, snapshotLoading, snapshotError] = useDocument(
   //   doc(db, "community", communitypage)
   // {
@@ -29,6 +30,9 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ communityData }) => {
   // }));
   // console.log(communitySnapshotData);
 
+  const { communitySnapshotData, snapshotLoading } =
+    useLiveCommunityData(communitypage);
+
   const { communityStateValue, onJoinOrLeaveCommunity, loading } =
     useCommunityData();
   const isJoined = !!communityStateValue.mySnippets.find(
@@ -40,8 +44,17 @@ const CommunityHeader: React.FC<CommunityHeaderProps> = ({ communityData }) => {
       <Box height="50%" width="100%" bg="blue.400"></Box>
       <Flex flexGrow={1} bg="white" justify="center">
         <Flex width={"95%"} maxW={"860px"}>
-          {communityData.imageUrl ? (
-            <Image src={communityData.imageUrl} alt="community image" />
+          {communityData.imageUrl || communitySnapshotData?.imageUrl ? (
+            <Image
+              src={communityData.imageUrl || communitySnapshotData?.imageUrl}
+              alt="community image"
+              boxSize={"66px"}
+              position="relative"
+              top={-3}
+              color="blue.500"
+              border="4px solid white"
+              borderRadius="full"
+            />
           ) : (
             <Icon
               as={FaReddit}

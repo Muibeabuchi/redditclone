@@ -22,6 +22,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams, useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import PostErrorAlert from "./PostErrorAlert";
+import useSelectFile from "@/hooks/useSelectFile";
 
 interface IAppProps {}
 
@@ -63,7 +64,7 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
     title: "",
     body: "",
   });
-  const [selectedFile, setSelectedFile] = React.useState("");
+  const { setSelectedFile, selectedFile, onSelectImage } = useSelectFile();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   function onTextChange(
@@ -74,17 +75,17 @@ const NewPostForm: React.FunctionComponent<IAppProps> = (props) => {
       [e.target.name]: e.target.value,
     }));
   }
-  function onSelectImage(e: React.ChangeEvent<HTMLInputElement>) {
-    const reader = new FileReader();
-    if (e.target.files?.[0]) {
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string);
-      }
-    };
-  }
+  // function onSelectImage(e: React.ChangeEvent<HTMLInputElement>) {
+  //   const reader = new FileReader();
+  //   if (e.target.files?.[0]) {
+  //     reader.readAsDataURL(e.target.files[0]);
+  //   }
+  //   reader.onload = (readerEvent) => {
+  //     if (readerEvent.target?.result) {
+  //       setSelectedFile(readerEvent.target.result as string);
+  //     }
+  //   };
+  // }
 
   async function handleCreatePost() {
     if (!textInputs.title) return;
